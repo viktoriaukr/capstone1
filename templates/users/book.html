@@ -1,0 +1,52 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-5 d-flex align-items-center">
+  <div class="row row-cols-md-2 g-5">
+    <div class="card mb-3" style="width: 13rem; height: 25rem">
+      <div class="col">
+        <img
+          src="http://covers.openlibrary.org/b/id/{{ book.covers[0] }}-M.jpg"
+          alt="{{ book.title }}"
+          class="mt-2 rounded"
+        />
+        <form method="post" action="">
+          <button class="btn btn-success border rounded" type="submit">
+            Add to list
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="col-10" style="width: 60rem">
+      <h1>{{title| replace("_", " ")}}</h1>
+      <h5>by <a href="">{{author.name}}</a></h5>
+      <p>
+        <i
+          class="fa-sharp fa-solid fa-star fa-flip fa-lg"
+          style="color: #ffdd00"
+        ></i>
+        {{rating.summary.average|round(2)}}
+      </p>
+      {% if book.description.value %}
+      <p>{{book.description.value}}</p>
+      {% else %}
+      <p>{{book.description}}</p>
+      {% endif %}
+      <p>Genres: <i>{{book.subjects|join(', ')}}</i></p>
+    </div>
+  </div>
+</div>
+<h3>Comments & Reviews</h3>
+<form
+  method="post"
+  action='/{{book.key}}/{{title|replace(" ", "_")}}/add_comment'
+>
+  <button type="submit" class="btn btn-dark rounded">Comment</button>
+</form>
+<hr />
+{% for review in reviews %}
+<div class="message-area" name="review">
+  <p>{{review.user.first_name}} {{review.user.last_name}}</p>
+  <p>{{review.text}}</p>
+  <span class="text-muted">{{review.timestamp.strftime('%d %B %Y')}}</span>
+  <hr />
+</div>
+{% endfor %} {% endblock %}
