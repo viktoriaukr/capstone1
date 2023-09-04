@@ -1,6 +1,5 @@
 from email.quoprimime import quote
 import os
-import random
 from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
@@ -134,7 +133,8 @@ def get_book(key, title):
     author_key = book["authors"][0]["author"]["key"]
     author = get_authors_details(author_key)
     rating = get_ratings_details(key)
-    reviews = Review.query.all()
+    form = ReviewForm()
+    reviews = Review.query.filter_by(book_id=key).all()
     return render_template(
         "users/book.html",
         book=book,
@@ -142,10 +142,11 @@ def get_book(key, title):
         author=author,
         rating=rating,
         reviews=reviews,
+        form=form,
     )
 
 
-@app.route("/<path:key>/<title>/add_comment", methods=["POST"])
+@app.route("/<path:key>/<title>", methods=["POST"])
 def comment(key, title):
     if not g.user:
         flash("Access unauthorized.", "danger")

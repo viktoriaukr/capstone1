@@ -20,6 +20,3 @@ def get_ratings_details(key):
     res = requests.get(url)
     data = res.json()
     return data
-
-
-

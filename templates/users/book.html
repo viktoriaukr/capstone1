@@ -34,13 +34,21 @@
     </div>
   </div>
 </div>
-<h3>Comments & Reviews</h3>
-<form
-  method="post"
-  action='/{{book.key}}/{{title|replace(" ", "_")}}/add_comment'
->
-  <button type="submit" class="btn btn-dark rounded">Comment</button>
-</form>
+<div class="row justify-content-md-start">
+  <div class="col-md-7 col-lg-5">
+    <h2 class="join-message">Comments & Reviews</h2>
+    <form method="POST">
+      {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
+      'hidden' %} {% for error in field.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %} {{ field(placeholder=field.label.text, class="form-control")
+      }} {% endfor %}
+
+      <button class="btn btn-primary btn-lg btn-block">Add comment</button>
+    </form>
+  </div>
+</div>
+
 <hr />
 {% for review in reviews %}
 <div class="message-area" name="review">
