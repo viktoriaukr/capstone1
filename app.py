@@ -161,15 +161,34 @@ def comment(key, title):
         g.user.review.append(review)
         db.session.commit()
         return redirect(f"/{key}/{title}")
-    return render_template("users/comment.html", form=form)
+    return render_template("users/book.html", form=form)
 
 
-# @app.route("/add_to_list/<path:key>", methods=["POST"])
-# def add_book(key):
+@app.route("/my/list")
+def list():
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
-#     if not g.user:
-#         flash("Access unauthorized.", "danger")
-#         return redirect("/")
+    return render_template("users/favs.html")
+
+
+@app.route("/<path:key>/<title>", methods=["POST"])
+def add_book(key, title):
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    book = get_books(key)
+    if book:
+        g.user.favorite.append(book)
+        db.session.commit()
+
+        flash("Successfully added.", "success")
+        return redirect(f"/{key}/{title}")
+    else:
+        flash("Something went wrong.", "danger")
+    return render_template("users/favs.html", book=book)
 
 
 @app.errorhandler(404)

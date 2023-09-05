@@ -26,15 +26,13 @@
   <body class="{% block body_class %}{% endblock %}">
     <nav class="navbar bg-info">
       <div class="container">
+        <a href="/" class="navbar-brand">
+          <span>Book Lover</span>
+        </a>
 
-          <a href="/" class="navbar-brand">
-            <span>Book Lover</span>
-          </a>
-
-       
-          <a href="/" class="nav-link">
-            <span>My Books</span>
-          </a>
+        <a href="/my/list" class="nav-link">
+          <span>My Books</span>
+        </a>
 
         <ul class="nav navbar-nav m1-auto align-items-center">
           {% if request.endpoint != None %}
