@@ -65,6 +65,9 @@ class Favorite(db.Model):
     book_id = db.Column(db.String, nullable=False)
     user = db.relationship("User", backref="favorites")
 
+    def __repr__(self):
+        return f"<Favorite #{self.id}: {self.user_id}, {self.book_id}, {self.status}>"
+
 
 class Review(db.Model):
     """User's comments"""
