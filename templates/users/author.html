@@ -1,0 +1,40 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-5 d-flex align-items-center">
+  <div class="row row-cols-md-2 g-5">
+    <div class="card mb-3" style="width: 13rem; height: 25rem">
+      <img
+        src="http://covers.openlibrary.org/a/oclc/{{ author.photos[0] }}-M.jpg"
+        alt="{{ author.name }}"
+        class="mt-2 rounded"
+      />
+    </div>
+    <div class="col-10" style="width: 60rem">
+      <h1>{{author.name}}</h1>
+      <h5>{{author.birth_date}}</h5>
+      <p>{{author.bio.value}}</p>
+    </div>
+    <hr />
+    <h1>Authors Works</h1>
+    {% for work in works %}
+    <div class="col">
+      <div class="card h-50">
+        <img
+          src="http://covers.openlibrary.org/b/id/{{ book.covers[0] }}-M.jpg"
+          alt="{{ book.title }}"
+          class="mt-2 rounded"
+        />
+
+        <div class="card-body">
+          <h5 class="card-title">
+            <a
+              href="{{ url_for('get_book', key=work.key, title = work.title|replace(' ', '_')) }}"
+              >{{work.title}}</a
+            >
+          </h5>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endblock %}
+</div>
