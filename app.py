@@ -191,33 +191,43 @@ def book_details(key, title):
     )
 
 
-@app.route("/<key>/<title>/edit", methods=["GET", "POST"])
+@app.route("/<path:key>/<title>/edit", methods=["GET", "POST"])
 def edit_review(key, title):
-    review = Review.query.filter_by(book_id=key, user_id=g.user.id).first()
-    if g.user.id != review.user_id:
+    if not g.user.id:
         flash("Access unauthorized.", "danger")
         return redirect("/")
-    form = EditReviewForm(obj=review)
-    if form.validate_on_submit():
-        review.user_rating = form.user_rating.data
-        review.text = form.text.data
-        db.session.commit()
-        flash("Review updated successfully.", "success")
-        return redirect(f"/{key}/{title}")
+    review = (
+        Review.query.filter(Review.book_id == key)
+        .filter(Review.user_id == g.user.id)
+        .first()
+    )
+    if review:
+        form = EditReviewForm(obj=review)
+        if form.validate_on_submit():
+            review.user_rating = form.user_rating.data
+            review.text = form.text.data
+            db.session.commit()
+            flash("Review updated successfully.", "success")
+            return redirect(f"/{key}/{title}")
+
     return render_template("users/edit.html", form=form, review=review)
 
 
-@app.route("/<key>/delete", methods=["POST"])
-def destroy_review(key):
+@app.route("/<path:key>/<title>/delete", methods=["POST"])
+def destroy_review(key, title):
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
+    review = (
+        Review.query.filter(Review.book_id == key)
+        .filter(Review.user_id == g.user.id)
+        .first()
+    )
+    if review:
+        db.session.delete(review)
+        db.session.commit()
 
-    review = Review.query.filter_by(book_id=key, user_id=g.user.id).first()
-
-    db.session.delete(review)
-    db.session.commit()
-    return redirect("/")
+    return redirect(f"/{key}/{title}")
 
 
 @app.route("/my/list")

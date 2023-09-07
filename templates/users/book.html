@@ -57,14 +57,17 @@
 <p>{{review.user.first_name}} {{review.user.last_name}}</p>
 <p>{{review.text}}</p>
 <div class="message-area" name="review">
-  <!-- <form method="POST">
-    <button class="btn btn-danger">Delete</button>
-  </form> -->
   <form
     method="POST"
-    action='/{{ book.key }}/{{ book.title|replace(" ", "_") }}/edit'
+    action='{{url_for("edit_review", key=book.key, title=book.title|replace(" ", "_"))}}'
   >
     <button class="btn btn-success">Edit</button>
+  </form>
+  <form
+    method="POST"
+    action="{{url_for('destroy_review',key=book.key, title=book.title|replace(' ', '_'))}}"
+  >
+    <button class="btn btn-outline-danger">Delete</button>
   </form>
   <span class="text-muted">{{review.timestamp.strftime('%d %B %Y')}}</span>
   <hr />
