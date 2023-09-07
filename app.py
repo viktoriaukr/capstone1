@@ -127,7 +127,28 @@ def fetch_books():
     return render_template("home.html", books=books)
 
 
-@app.route("/<path:key>/<title>", methods=["GET", "POST"])
+@app.route("/<path:key>/<title>", methods=["GET"])
+def get_book(key, title):
+    book = get_books(key)
+    author_key = book["authors"][0]["author"]["key"]
+    author = get_authors_details(author_key)
+    rating = get_ratings_details(key)
+    reviews = Review.query.filter_by(book_id=key).all()
+    form = FavoriteForm()
+    form2 = ReviewForm()
+    return render_template(
+        "users/book.html",
+        book=book,
+        title=title,
+        author=author,
+        rating=rating,
+        reviews=reviews,
+        form=form,
+        form2=form2,
+    )
+
+
+@app.route("/<path:key>/<title>", methods=["POST"])
 def book_details(key, title):
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -135,7 +156,6 @@ def book_details(key, title):
 
     form = FavoriteForm()
     form2 = ReviewForm()
-    reviews = Review.query.filter_by(book_id=key).all()
 
     if request.method == "POST" and form.validate_on_submit():
         # Handle the form submission for adding the book to favorites
@@ -144,7 +164,7 @@ def book_details(key, title):
         g.user.favorite.append(favorite)
         db.session.commit()
         flash("Successfully added.", "success")
-        return redirect("/my/list")
+        return redirect(f"/{key}/{title}")
 
     if request.method == "POST" and form2.validate_on_submit():
         # Handle the form submission for adding a review
@@ -156,19 +176,8 @@ def book_details(key, title):
         flash("Review added successfully.", "success")
         return redirect(f"/{key}/{title}")
 
-    # Handle the GET request to display book details
-    book = get_books(key)
-    author_key = book["authors"][0]["author"]["key"]
-    author = get_authors_details(author_key)
-    rating = get_ratings_details(key)
-
     return render_template(
         "users/book.html",
-        book=book,
-        title=title,
-        author=author,
-        rating=rating,
-        reviews=reviews,
         form=form,
         form2=form2,
     )
