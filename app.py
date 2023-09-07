@@ -3,13 +3,9 @@ import os
 from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
-from fetch import (
-    get_books,
-    get_authors_details,
-    get_ratings_details,
-)
+from fetch import get_books, get_authors_details, get_ratings_details, search
 from models import db, connect_db, User, Review, Favorite
-from forms import UserAddForm, LoginForm, ReviewForm, FavoriteForm
+from forms import UserAddForm, LoginForm, ReviewForm, FavoriteForm, EditReviewForm
 
 CURR_USER_KEY = "curr_user"
 
@@ -116,6 +112,18 @@ def logout():
 
 
 ###############################################################################################
+# Search for books or authors
+
+
+@app.route("/search", methods=["GET"])
+def search():
+    search_query = request.args.get("q")
+
+    results = search(search_query)
+    return render_template("users/show.html", results=results)
+
+
+###############################################################################################
 # Fetch books for a homepage
 
 
@@ -156,18 +164,18 @@ def book_details(key, title):
 
     form = FavoriteForm()
     form2 = ReviewForm()
+    exists = Favorite.query.filter_by(user_id=g.user.id, book_id=key).first()
 
-    if request.method == "POST" and form.validate_on_submit():
-        # Handle the form submission for adding the book to favorites
-        status = form.status.data
-        favorite = Favorite(status=status, book_id=key)
-        g.user.favorite.append(favorite)
-        db.session.commit()
-        flash("Successfully added.", "success")
-        return redirect(f"/{key}/{title}")
+    if not exists:
+        if request.method == "POST" and form.validate_on_submit():
+            status = form.status.data
+            favorite = Favorite(status=status, book_id=key)
+            g.user.favorite.append(favorite)
+            db.session.commit()
+            flash("Successfully added.", "success")
+            return redirect(f"/{key}/{title}")
 
     if request.method == "POST" and form2.validate_on_submit():
-        # Handle the form submission for adding a review
         text = form2.text.data
         user_rating = form2.user_rating.data
         review = Review(text=text, user_rating=user_rating, book_id=key)
@@ -183,12 +191,42 @@ def book_details(key, title):
     )
 
 
+@app.route("/<key>/<title>/edit", methods=["GET", "POST"])
+def edit_review(key, title):
+    review = Review.query.filter_by(book_id=key, user_id=g.user.id).first()
+    if g.user.id != review.user_id:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    form = EditReviewForm(obj=review)
+    if form.validate_on_submit():
+        review.user_rating = form.user_rating.data
+        review.text = form.text.data
+        db.session.commit()
+        flash("Review updated successfully.", "success")
+        return redirect(f"/{key}/{title}")
+    return render_template("users/edit.html", form=form, review=review)
+
+
+@app.route("/<key>/delete", methods=["POST"])
+def destroy_review(key):
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    review = Review.query.filter_by(book_id=key, user_id=g.user.id).first()
+
+    db.session.delete(review)
+    db.session.commit()
+    return redirect("/")
+
+
 @app.route("/my/list")
 def list():
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
-    books = Favorite.query.all()
+    user_id = g.user.id
+    books = Favorite.query.filter_by(user_id=user_id).all()
     return render_template("users/favs.html", books=books)
 
 

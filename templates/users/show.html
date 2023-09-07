@@ -1,13 +1,10 @@
-{% extends "base.html" %} {% block content %}
-
-<h2 class="mt-4">Trending Books</h2>
+{% extends 'base.html' %} {% block content %}
 <div class="container">
   <div class="row row-cols-1 row-cols-md-6 g-4">
-    {% for book in books %}
-    <p>{{book}}</p>
+    {% for result in results %}
     <div class="col">
       <div class="card h-100">
-        {% if book.availability is defined and book.availability.isbn is not
+        <!-- {% if book.availability is defined and book.availability.isbn is not
         none %}
         <img
           src="http://covers.openlibrary.org/b/isbn/{{ book.availability.isbn }}-M.jpg"
@@ -20,12 +17,12 @@
           class="card-img-top"
           alt="{{ book.title }}"
         />
-        {% endif %}
+        {% endif %} -->
         <div class="card-body">
           <h5 class="card-title">
             <a
               href="{{ url_for('get_book', key=book.key, title = book.title|replace(' ', '_')) }}"
-              >{{book.title}}</a
+              >{{result.docs.title}}</a
             >
           </h5>
           <p class="card-text">by {{book.author_name | join(" , ")}}</p>
@@ -35,4 +32,5 @@
     {% endfor %}
   </div>
 </div>
+
 {% endblock %}

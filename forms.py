@@ -41,3 +41,10 @@ class FavoriteForm(FlaskForm):
             ("read", "Read"),
         ],
     )
+
+
+class EditReviewForm(FlaskForm):
+    user_rating = SelectField(
+        "Rating", choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)]
+    )
+    text = TextAreaField("Comment", validators=[DataRequired()])

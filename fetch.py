@@ -20,3 +20,10 @@ def get_ratings_details(key):
     res = requests.get(url)
     data = res.json()
     return data
+
+
+def search(value):
+    url = f"https://openlibray.org/search.json?q = {value}"
+    res = requests.get(url)
+    data = res.json()
+    return data

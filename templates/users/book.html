@@ -54,9 +54,18 @@
 
 <hr />
 {% for review in reviews %}
+<p>{{review.user.first_name}} {{review.user.last_name}}</p>
+<p>{{review.text}}</p>
 <div class="message-area" name="review">
-  <p>{{review.user.first_name}} {{review.user.last_name}}</p>
-  <p>{{review.text}}</p>
+  <!-- <form method="POST">
+    <button class="btn btn-danger">Delete</button>
+  </form> -->
+  <form
+    method="POST"
+    action='/{{ book.key }}/{{ book.title|replace(" ", "_") }}/edit'
+  >
+    <button class="btn btn-success">Edit</button>
+  </form>
   <span class="text-muted">{{review.timestamp.strftime('%d %B %Y')}}</span>
   <hr />
 </div>
