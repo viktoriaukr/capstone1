@@ -8,7 +8,14 @@
           alt="{{ book.title }}"
           class="mt-2 rounded"
         />
-        
+        <form method="POST">
+          {{ form.hidden_tag() }} {% for field in form if
+          field.widget.input_type != 'hidden' %} {% for error in field.errors %}
+          <span class="text-danger">{{ error }}</span>
+          {% endfor %} {{ field(placeholder=field.label.text,
+          class="form-control") }} {% endfor %}
+          <button class="btn btn-primary btn-lg btn-block">Add to list</button>
+        </form>
       </div>
     </div>
     <div class="col-10" style="width: 60rem">
@@ -34,8 +41,8 @@
   <div class="col-md-7 col-lg-5">
     <h2 class="join-message">Comments & Reviews</h2>
     <form method="POST">
-      {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
-      'hidden' %} {% for error in field.errors %}
+      {{ form2.hidden_tag() }} {% for field in form2 if field.widget.input_type
+      != 'hidden' %} {% for error in field.errors %}
       <span class="text-danger">{{ error }}</span>
       {% endfor %} {{ field(placeholder=field.label.text, class="form-control")
       }} {% endfor %}

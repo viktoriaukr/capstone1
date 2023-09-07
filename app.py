@@ -133,7 +133,7 @@ def get_book(key, title):
     author_key = book["authors"][0]["author"]["key"]
     author = get_authors_details(author_key)
     rating = get_ratings_details(key)
-    form = ReviewForm()
+    form2 = ReviewForm()
     reviews = Review.query.filter_by(book_id=key).all()
     return render_template(
         "users/book.html",
@@ -142,7 +142,7 @@ def get_book(key, title):
         author=author,
         rating=rating,
         reviews=reviews,
-        form=form,
+        form2=form2,
     )
 
 
@@ -152,16 +152,35 @@ def comment(key, title):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    form = ReviewForm()
+    form2 = ReviewForm()
 
-    if form.validate_on_submit():
-        text = form.text.data
-        user_rating = form.user_rating.data
+    if form2.validate_on_submit():
+        text = form2.text.data
+        user_rating = form2.user_rating.data
         review = Review(text=text, user_rating=user_rating, book_id=key)
         g.user.review.append(review)
         db.session.commit()
         return redirect(f"/{key}/{title}")
-    return render_template("users/book.html", form=form)
+    return render_template("users/book.html", form2=form2)
+
+
+@app.route("/<path:key>/<title>", methods=["POST"])
+def add_book(key):
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    form = FavoriteForm()
+    if form.validate_on_submit():
+        status = form.status.data
+        favorite = Favorite(status=status, book_id=key)
+        g.user.favorite.append(favorite)
+        db.session.commit()
+
+        flash("Successfully added.", "success")
+        return redirect("/my/list")
+    else:
+        flash("Something went wrong.", "danger")
+    return render_template("users/favs.html", form=form)
 
 
 @app.route("/my/list")
@@ -169,26 +188,8 @@ def list():
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
-
-    return render_template("users/favs.html")
-
-
-@app.route("/<path:key>/<title>", methods=["POST"])
-def add_book(key, title):
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
-
-    book = get_books(key)
-    if book:
-        g.user.favorite.append(book)
-        db.session.commit()
-
-        flash("Successfully added.", "success")
-        return redirect(f"/{key}/{title}")
-    else:
-        flash("Something went wrong.", "danger")
-    return render_template("users/favs.html", book=book)
+    books = Favorite.query.all()
+    return render_template("users/favs.html", books=books)
 
 
 @app.errorhandler(404)
