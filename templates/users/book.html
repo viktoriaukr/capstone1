@@ -20,7 +20,7 @@
     </div>
     <div class="col-10" style="width: 60rem">
       <h1>{{title| replace("_", " ")}}</h1>
-      <h5>by <a href="">{{author.name}}</a></h5>
+      <h5>by <a href="{{url_for('authors', key=author.key)}}">{{author.name}}</a></h5>
       <p>
         <i
           class="fa-sharp fa-solid fa-star fa-flip fa-lg"

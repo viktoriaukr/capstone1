@@ -3,7 +3,13 @@ import os
 from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
-from fetch import get_books, get_authors_details, get_ratings_details, search
+from fetch import (
+    get_books,
+    get_authors_details,
+    get_ratings_details,
+    search,
+    author_works,
+)
 from models import db, connect_db, User, Review, Favorite
 from forms import UserAddForm, LoginForm, ReviewForm, FavoriteForm, EditReviewForm
 
@@ -230,16 +236,36 @@ def destroy_review(key, title):
     return redirect(f"/{key}/{title}")
 
 
-@app.route("/my/list")
-def list():
+@app.route("/<path:key>/<title>/my/list")
+def list(key, title):
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
     user_id = g.user.id
-    books = Favorite.query.filter_by(user_id=user_id).all()
+    books = (
+        Favorite.query.filter(Favorite.book_id == key)
+        .filter(Favorite.user_id == user_id)
+        .all()
+    )
     return render_template("users/favs.html", books=books)
 
 
+#######################################################################################
+# Authors information page
+
+
+@app.route("/<path:key>/author", methods=["GET"])
+def authors(key):
+    author = get_authors_details(key)
+    data = author_works(key)
+    works = data.get("entries")
+    book_key = works["key"]
+    book = get_books(book_key)
+    return render_template("users/author.html", author=author, works=works, book=book)
+
+
+########################################################################################
+# Error handling
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404

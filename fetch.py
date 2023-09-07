@@ -27,3 +27,10 @@ def search(value):
     res = requests.get(url)
     data = res.json()
     return data
+
+
+def author_works(key):
+    url = f"https://openlibrary.org/{key}/works.json"
+    res = requests.get(url)
+    data = res.json()
+    return data
