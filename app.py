@@ -122,11 +122,11 @@ def logout():
 
 
 @app.route("/search", methods=["GET"])
-def search():
+def search_books():
     search_query = request.args.get("q")
 
-    results = search(search_query)
-    return render_template("users/show.html", results=results)
+    books = search(search_query)
+    return render_template("users/show.html", books=books)
 
 
 ###############################################################################################
@@ -236,17 +236,15 @@ def destroy_review(key, title):
     return redirect(f"/{key}/{title}")
 
 
-@app.route("/<path:key>/<title>/my/list")
-def list(key, title):
+#######################################################################################
+
+
+@app.route("/my/list")
+def list():
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
-    user_id = g.user.id
-    books = (
-        Favorite.query.filter(Favorite.book_id == key)
-        .filter(Favorite.user_id == user_id)
-        .all()
-    )
+    books = Favorite.query.all()
     return render_template("users/favs.html", books=books)
 
 
@@ -259,9 +257,7 @@ def authors(key):
     author = get_authors_details(key)
     data = author_works(key)
     works = data.get("entries")
-    book_key = works["key"]
-    book = get_books(book_key)
-    return render_template("users/author.html", author=author, works=works, book=book)
+    return render_template("users/author.html", author=author, works=works)
 
 
 ########################################################################################

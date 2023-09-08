@@ -13,28 +13,20 @@
       <h5>{{author.birth_date}}</h5>
       <p>{{author.bio.value}}</p>
     </div>
-    <hr />
-    <h1>Authors Works</h1>
-    {% for work in works %}
-    <div class="col">
-      <div class="card h-50">
-        <img
-          src="http://covers.openlibrary.org/b/id/{{ book.covers[0] }}-M.jpg"
-          alt="{{ book.title }}"
-          class="mt-2 rounded"
-        />
+    <div>
+      <h1>Author's Works</h1>
+      {% for work in works %}
+      <ul>
+        <li class="card-title">
+          <a
+            href="{{ url_for('get_book', key=work.key, title = work.title|replace(' ', '_')) }}"
+            >{{work.title}}</a
+          >
+        </li>
+      </ul>
 
-        <div class="card-body">
-          <h5 class="card-title">
-            <a
-              href="{{ url_for('get_book', key=work.key, title = work.title|replace(' ', '_')) }}"
-              >{{work.title}}</a
-            >
-          </h5>
-        </div>
-      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
-  {% endblock %}
 </div>
+{% endblock %}
