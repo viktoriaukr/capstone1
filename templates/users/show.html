@@ -1,28 +1,26 @@
 {% extends 'base.html' %} {% block content %}
-<div class="container">
+<div class="container mt-4 my-4">
   <div class="row row-cols-1 row-cols-md-6 g-4">
     {% for book in books %}
     <div class="col">
       <div class="card h-100">
-        <!-- {% if book.availability is defined and book.availability.isbn is not
-        none %}
-        <img
-          src="http://covers.openlibrary.org/b/isbn/{{ book.availability.isbn }}-M.jpg"
-          class="card-img-top"
-          alt="{{ book.title }}"
-        />
-        {% else %}
+        {% if book.cover_edition_key %}
         <img
           src="http://covers.openlibrary.org/b/olid/{{ book.cover_edition_key }}-M.jpg"
           class="card-img-top"
           alt="{{ book.title }}"
         />
-        {% endif %} -->
+        {% else %}
+        <img
+          src="../../static/images/default-placeholder.png"
+          class="card-img-top"
+          alt="{{ book.title }}"
+        />{% endif %}
         <div class="card-body">
           <h5 class="card-title">
             <a
               href="{{ url_for('get_book', key=book.key, title = book.title|replace(' ', '_')) }}"
-              >{{result.docs.title}}</a
+              >{{book.title}}</a
             >
           </h5>
           <p class="card-text">by {{book.author_name | join(" , ")}}</p>

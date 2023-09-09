@@ -22,11 +22,26 @@ def get_ratings_details(key):
     return data
 
 
-def search(value):
-    url = f"https://openlibray.org/search.json?q = {value}"
-    res = requests.get(url)
-    data = res.json()
-    return data
+def search(q):
+    url = f"https://openlibrary.org/search.json?q={q}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        try:
+            data = response.json()
+            # Access the list of documents
+            docs = data.get("docs", [])
+            return docs
+        except Exception as e:
+            print(f"Error parsing JSON response: {e}")
+            return []
+    else:
+        # Handle the API error here and print response content
+        print(f"API Error: {response.status_code}")
+        print(response.text)
+        return []
+
+
 
 
 def author_works(key):
