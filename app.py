@@ -121,11 +121,12 @@ def logout():
 # Search for books or authors
 
 
-@app.route("/search", methods=["GET"])
-def search_books():
-    search_query = request.args.get("q")
-
+@app.route("/search", methods=["POST"])
+def search_data():
+    search_query = request.form.get("q")
     books = search(search_query)
+    print(search_query)
+    print(books)
     return render_template("users/show.html", books=books)
 
 
