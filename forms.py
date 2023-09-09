@@ -38,7 +38,7 @@ class FavoriteForm(FlaskForm):
         choices=[
             ("want", "Want to read"),
             ("reading", "Currently reading"),
-            ("read", "Read"),
+            ("read", "Read"), 
         ],
     )
 

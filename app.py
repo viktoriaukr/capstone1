@@ -245,8 +245,27 @@ def list():
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
-    books = Favorite.query.all()
+    books = []
+    favs = Favorite.query.all()
+    for book in favs:
+        book_id = book.book_id
+        book = get_books(book_id)
+        author_key = book["authors"][0]["author"]["key"]
+        author = get_authors_details(author_key)
+        books.append({"book": book, "author": author})
     return render_template("users/favs.html", books=books)
+
+
+@app.route("/my/list/delete", methods=["POST"])
+def destroy_choice():
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    books = Favorite.query.all()
+    for book in books:
+        db.session.delete(book)
+        db.session.commit()
+    return redirect("/my/list")
 
 
 #######################################################################################
