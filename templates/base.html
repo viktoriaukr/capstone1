@@ -20,24 +20,31 @@
       src="https://kit.fontawesome.com/48ec6c005f.js"
       crossorigin="anonymous"
     ></script>
-    <link rel="stylesheet" href="/static/stylesheets/app.css" />
+    <link rel="stylesheet" href="../static/css/app.css" />
   </head>
 
-  <body class="{% block body_class %}{% endblock %}">
-    <nav class="navbar bg-info">
+  <body
+    style="background-color: rgb(250, 250, 245)"
+    class="{% block body_class %}{% endblock %}"
+  >
+    <nav
+      class="navbar navbar-expand-lg navbar-light"
+      style="background-color: #609885"
+      id="nav"
+    >
       <div class="container">
-        <a href="/" class="navbar-brand">
-          <span>Book Lover</span>
-        </a>
-
-        <a href="/my/list" class="nav-link">
-          <span>My Books</span>
-        </a>
-
-        <ul class="nav navbar-nav m1-auto align-items-center">
+        <div>
+          <a href="/" class="navbar-brand d-inline">
+            <span>Book Lover</span>
+          </a>
+          <a href="/my/list" class="nav-link d-inline">
+            <span>My Books</span>
+          </a>
+        </div>
+        <ul class="nav navbar-nav mr-auto">
           {% if request.endpoint != None %}
           <li>
-            <form class="navbar-form d-flex" action="/search">
+            <form method="post" class="navbar-form d-flex" action="/search">
               <input
                 name="q"
                 class="form-control me-2"

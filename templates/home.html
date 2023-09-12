@@ -1,12 +1,18 @@
 {% extends "base.html" %} {% block content %}
 
 <h2 class="mt-4">Trending Books</h2>
-<div class="container">
+<div class="container my-4">
   <div class="row row-cols-1 row-cols-md-6 g-4">
     {% for book in books %}
     <div class="col">
-      <div class="card h-100">
-        {% if book.availability is defined and book.availability.isbn is not
+      <div class="card h-100" style="background-color: rgb(255, 255, 255);">
+        {% if book.cover_edition_key is defined %}
+        <img
+          src="http://covers.openlibrary.org/b/olid/{{ book.cover_edition_key }}-M.jpg"
+          class="card-img-top"
+          alt="{{ book.title }}"
+        />
+        {% elif book.availability is defined and book.availability.isbn is not
         none %}
         <img
           src="http://covers.openlibrary.org/b/isbn/{{ book.availability.isbn }}-M.jpg"
@@ -15,7 +21,7 @@
         />
         {% else %}
         <img
-          src="http://covers.openlibrary.org/b/olid/{{ book.cover_edition_key }}-M.jpg"
+          src="../static/images/default-placeholder.png"
           class="card-img-top"
           alt="{{ book.title }}"
         />
@@ -23,8 +29,9 @@
         <div class="card-body">
           <h5 class="card-title">
             <a
+              class="text-decoration-none text-reset"
               href="{{ url_for('get_book', key=book.key, title = book.title|replace(' ', '_')) }}"
-              >{{book.title}}</a
+              ><span>{{book.title}}</span></a
             >
           </h5>
           <p class="card-text">by {{book.author_name | join(" , ")}}</p>

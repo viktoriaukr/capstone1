@@ -123,10 +123,8 @@ def logout():
 
 @app.route("/search", methods=["POST"])
 def search_data():
-    search_query = request.form.get("q")
+    search_query = request.args.get("q")
     books = search(search_query)
-    print(search_query)
-    print(books)
     return render_template("users/show.html", books=books)
 
 
@@ -168,7 +166,7 @@ def book_details(key, title):
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
-
+    book = get_books(key)
     form = FavoriteForm()
     form2 = ReviewForm()
     exists = Favorite.query.filter_by(user_id=g.user.id, book_id=key).first()
@@ -191,11 +189,7 @@ def book_details(key, title):
         flash("Review added successfully.", "success")
         return redirect(f"/{key}/{title}")
 
-    return render_template(
-        "users/book.html",
-        form=form,
-        form2=form2,
-    )
+    return render_template("users/book.html", form=form, form2=form2, book=book)
 
 
 @app.route("/<path:key>/<title>/edit", methods=["GET", "POST"])
@@ -272,7 +266,7 @@ def destroy_choice():
 # Authors information page
 
 
-@app.route("/<path:key>/author", methods=["GET"])
+@app.route("/<path:key>/author", methods=["GET", "POST"])
 def authors(key):
     author = get_authors_details(key)
     data = author_works(key)
