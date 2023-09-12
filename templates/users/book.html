@@ -4,23 +4,33 @@
     <div class="card mb-3" style="width: 13rem; height: 25rem">
       <div class="col">
         <img
-          src="http://covers.openlibrary.org/b/id/{{ book.covers[0] }}-M.jpg"
+          src="http://covers.openlibrary.org/b/id/{{ book.book.covers[0] }}-M.jpg"
           alt="{{ book.title }}"
-          class="mt-2 rounded"
+          class="card-img-top mt-2 rounded"
         />
-        <form method="POST">
-          {{ form.hidden_tag() }} {% for field in form if
-          field.widget.input_type != 'hidden' %} {% for error in field.errors %}
-          <span class="text-danger">{{ error }}</span>
-          {% endfor %} {{ field(placeholder=field.label.text,
-          class="form-control") }} {% endfor %}
-          <button class="btn btn-primary btn-lg btn-block">Add to list</button>
-        </form>
+        <div class="card-body">
+          <form method="POST" style="width: 8rem">
+            {{ form.hidden_tag() }} {% for field in form if
+            field.widget.input_type != 'hidden' %} {% for error in field.errors
+            %}
+            <span class="text-danger">{{ error }}</span>
+            {% endfor %} {{ field(placeholder=field.label.text,
+            class="form-control") }} {% endfor %}
+            <button class="btn btn-primary btn-block" style="width: 8rem">
+              Add to list
+            </button>
+          </form>
+        </div>
       </div>
     </div>
     <div class="col-10" style="width: 60rem">
       <h1>{{title| replace("_", " ")}}</h1>
-      <h5>by <a href="{{url_for('authors', key=author.key)}}">{{author.name}}</a></h5>
+      <h5>
+        by
+        <a href="{{url_for('authors', key=author.key)}}"
+          ><span>{{author.name}}</span></a
+        >
+      </h5>
       <p>
         <i
           class="fa-sharp fa-solid fa-star fa-flip fa-lg"
