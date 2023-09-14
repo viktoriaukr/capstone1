@@ -3,25 +3,25 @@
   <div class="row row-cols-1 row-cols-md-6 g-4">
     {% if not books %}
     <p>List is empty.</p>
-    {% else %} {% for book, author in books %}
+    {% else %} {% for book in books %}
     <div class="col">
       <div class="card h-100">
         <img
-          src="http://covers.openlibrary.org/b/id/{{ book.covers[0] }}-M.jpg"
+          src="http://covers.openlibrary.org/b/id/{{ book.book.covers[0] }}-M.jpg"
           alt="{{ book.title }}"
           class="mt-2 rounded"
         />
         <div class="card-body">
           <h5 class="card-title">
             <a
-              href="{{ url_for('get_book', key=book.key, title=book.title|replace(' ', '_')) }}"
+              href="{{ url_for('get_book', key=book.book.key, title=book.book.title|replace(' ', '_')) }}"
             >
               <span>{{ book.title }}</span>
             </a>
           </h5>
           <p>
             by
-            <a href="{{ url_for('authors', key=author.key) }}"
+            <a href="{{ url_for('authors', key=book.author.key) }}"
               >{{ author.name }}</a
             >
           </p>
