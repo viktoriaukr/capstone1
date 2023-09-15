@@ -36,9 +36,9 @@ class FavoriteForm(FlaskForm):
     status = SelectField(
         "Status",
         choices=[
-            ("want", "Want to read"),
-            ("reading", "Currently reading"),
-            ("read", "Read"),
+            ("want to read", "want to read"),
+            ("currently reading", "currently reading"),
+            ("read", "read"),
         ],
     )
 

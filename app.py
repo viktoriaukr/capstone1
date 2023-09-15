@@ -241,12 +241,13 @@ def list():
         return redirect("/")
     books = []
     favs = Favorite.query.all()
-    for book in favs:
-        book_id = book.book_id
+    for b in favs:
+        book_id = b.book_id
         book = get_books(book_id)
         author_key = book["authors"][0]["author"]["key"]
         author = get_authors_details(author_key)
-        books.append({"book": book, "author": author})
+        status = b.status
+        books.append({"book": book, "author": author, "status": status})
     return render_template("users/favs.html", books=books)
 
 
@@ -270,7 +271,7 @@ def destroy_choice():
 def authors(key):
     author = get_authors_details(key)
     data = author_works(key)
-    works = data.get("entries")
+    works = data.get("entries")[:10]
     return render_template("users/author.html", author=author, works=works)
 
 
