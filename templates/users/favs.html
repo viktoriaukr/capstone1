@@ -1,40 +1,42 @@
 {% extends "base.html" %} {% block content %}
-<div class="container">
+<div class="container mt-5 mb-5">
+  {% if not books %}
+  <p>List is empty.</p>
+  {% else %}
   <div class="row row-cols-1 row-cols-md-6 g-4">
-    {% if not books %}
-    <p>List is empty.</p>
-    {% else %} {% for book, author in books %}
+    {% for book in books %}
     <div class="col">
       <div class="card h-100">
         <img
-          src="http://covers.openlibrary.org/b/id/{{ book.covers[0] }}-M.jpg"
-          alt="{{ book.title }}"
-          class="mt-2 rounded"
+          src="http://covers.openlibrary.org/b/id/{{ book.book.covers[0] }}-M.jpg"
+          alt="{{ book.book.title }}"
+          class="rounded"
         />
         <div class="card-body">
           <h5 class="card-title">
             <a
-              href="{{ url_for('get_book', key=book.key, title=book.title|replace(' ', '_')) }}"
+              class="text-decoration-none text-reset"
+              href="{{ url_for('get_book', key=book.book.key, title=book.book.title|replace(' ', '_')) }}"
             >
-              <span>{{ book.title }}</span>
+              <span>{{ book.book.title }}</span>
             </a>
           </h5>
           <p>
             by
-            <a href="{{ url_for('authors', key=author.key) }}"
-              >{{ author.name }}</a
+            <a
+              class="text-decoration-none text-reset"
+              href="{{ url_for('authors', key=book.author.key) }}"
+              >{{ book.author.name }}</a
             >
           </p>
+          <p>Status: <i>{{book.status}}</i></p>
           <form method="POST" action="/my/list/delete">
-            <button class="btn btn-danger">Delete</button>
+            <button class="btn btn-danger" style="width: 10rem">Delete</button>
           </form>
         </div>
       </div>
     </div>
-    {% endfor %}
+    {% endfor %} {% endif %}
   </div>
-</div>
-{% endif %}
-</div>
 </div>
 {% endblock %}
