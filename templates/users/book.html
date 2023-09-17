@@ -5,16 +5,23 @@
       class="card mb-3"
       style="
         width: 13rem;
-        height: 25rem;
+        height: 27rem;
         background-color: rgba(236, 174, 18, 0.49);
       "
     >
       <div class="col">
+        {% if book.covers%}
         <img
           src="http://covers.openlibrary.org/b/id/{{ book.covers[0] }}-L.jpg"
+          class="card-img-top mt-4 rounded shadow-lg mb-3"
           alt="{{ book.title }}"
-          class="card-img-top mt-4 rounded shadow-lg mb-4"
         />
+        {% else %}
+        <img
+          src="../../static/images/default-placeholder.png"
+          class="card-img-top mt-4 rounded shadow-lg mb-4"
+          alt="{{ book.title }}"
+        />{% endif %}
         <div class="card-body">
           <form method="POST" style="width: 8rem">
             {{ form.hidden_tag() }} {% for field in form if
@@ -32,12 +39,14 @@
     </div>
     <div class="col-10" style="width: 60rem">
       <h1>{{title| replace("_", " ")}}</h1>
+      {% if author.name %}
       <h5>
         by
         <a href="{{url_for('authors', key=author.key)}}"
           ><span>{{author.name}}</span></a
         >
       </h5>
+      {% endif %} {% if rating.summary.average is not none %}
       <p>
         <i
           class="fa-sharp fa-solid fa-star fa-flip fa-lg"
@@ -45,12 +54,13 @@
         ></i>
         {{rating.summary.average|round(2)}}
       </p>
-      {% if book.description.value %}
-      <p>{{book.description.value}}</p>
+      {% endif %} {% if book.description %} {% if book.description.value %}
+      <p>{{ book.description.value }}</p>
       {% else %}
-      <p>{{book.description}}</p>
-      {% endif %}
+      <p>{{ book.description }}</p>
+      {% endif %} {% endif %} {% if book.subjects %}
       <p>Genres: <i>{{book.subjects|join(', ')}}</i></p>
+      {% endif %}
     </div>
   </div>
 </div>

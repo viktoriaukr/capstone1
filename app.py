@@ -123,8 +123,9 @@ def logout():
 
 @app.route("/search", methods=["POST"])
 def search_data():
-    search_query = request.args.get("q")
-    books = search(search_query)
+    args = request.form
+    response = args.get("q")
+    books = search(response)[:18]
     return render_template("users/show.html", books=books)
 
 
@@ -143,7 +144,12 @@ def fetch_books():
 @app.route("/<path:key>/<title>", methods=["GET"])
 def get_book(key, title):
     book = get_books(key)
-    author_key = book["authors"][0]["author"]["key"]
+
+    if "authors" in book and book["authors"]:
+        author_key = book["authors"][0]["author"]["key"]
+    else:
+        author_key = None
+
     author = get_authors_details(author_key)
     rating = get_ratings_details(key)
     reviews = Review.query.filter_by(book_id=key).all()
