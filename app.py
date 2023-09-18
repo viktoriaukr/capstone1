@@ -123,6 +123,7 @@ def logout():
 
 @app.route("/search", methods=["POST"])
 def search_data():
+    """Search for books or authors."""
     args = request.form
     response = args.get("q")
     books = search(response)[:18]
@@ -135,6 +136,7 @@ def search_data():
 
 @app.route("/")
 def fetch_books():
+    """Fetches books for home page."""
     limit = 18
     data = get_books("/trending/yearly")
     books = data.get("works")[:limit]
@@ -143,6 +145,7 @@ def fetch_books():
 
 @app.route("/<path:key>/<title>", methods=["GET"])
 def get_book(key, title):
+    """Returns information about one particular book."""
     book = get_books(key)
 
     if "authors" in book and book["authors"]:
@@ -169,6 +172,7 @@ def get_book(key, title):
 
 @app.route("/<path:key>/<title>", methods=["POST"])
 def book_details(key, title):
+    """Allows user to make a comment on a book and gives user ability to add specific book to favorites."""
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -198,10 +202,9 @@ def book_details(key, title):
     return render_template("users/book.html", form=form, form2=form2, book=book)
 
 
-
-
 @app.route("/<path:key>/<title>/edit", methods=["GET", "POST"])
 def edit_review(key, title):
+    """Allows editing of a review."""
     if not g.user.id:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -224,6 +227,7 @@ def edit_review(key, title):
 
 @app.route("/<path:key>/<title>/delete", methods=["POST"])
 def destroy_review(key, title):
+    """Delete a review."""
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -244,6 +248,7 @@ def destroy_review(key, title):
 
 @app.route("/my/list")
 def list():
+    """Shows user's favorite books."""
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -261,6 +266,7 @@ def list():
 
 @app.route("/my/list/delete", methods=["POST"])
 def destroy_choice():
+    """Allows users to delete books from the favorites."""
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -277,6 +283,7 @@ def destroy_choice():
 
 @app.route("/<path:key>/author", methods=["GET", "POST"])
 def authors(key):
+    """Shows author's details."""
     author = get_authors_details(key)
     data = author_works(key)
     works = data.get("entries")[:10]
@@ -287,4 +294,5 @@ def authors(key):
 # Error handling
 @app.errorhandler(404)
 def page_not_found(e):
+    """Error handling."""
     return render_template("404.html"), 404
