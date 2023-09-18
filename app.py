@@ -198,6 +198,8 @@ def book_details(key, title):
     return render_template("users/book.html", form=form, form2=form2, book=book)
 
 
+
+
 @app.route("/<path:key>/<title>/edit", methods=["GET", "POST"])
 def edit_review(key, title):
     if not g.user.id:
