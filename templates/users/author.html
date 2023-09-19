@@ -18,12 +18,17 @@
       {% endif %}
     </div>
     <div class="mb-5">
-      <h1>Author's Works</h1>
-      <small
-        >("You can explore more books written by this author using our search
-        feature. Below, we've provided a short list of some popular
-        books")</small
-      >
+      <h1>
+        Author's Works
+        <small
+          style="font-size: 1.5rem"
+          title="You can explore more books written by this author using our search
+      feature. Below, we've provided a short list of some popular
+      books"
+          ><i class="fa-regular fa-circle-question" style="color: #30cadf"></i
+        ></small>
+      </h1>
+
       {% for work in works %}
       <ul>
         <li class="card-title mt-3">

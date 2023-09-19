@@ -19,11 +19,21 @@
         <div class="card-body">
           <h5 class="card-title">
             <a
+              class="text-decoration-none text-reset"
               href="{{ url_for('get_book', key=book.key, title = book.title|replace(' ', '_')) }}"
               >{{book.title}}</a
             >
           </h5>
-          <p class="card-text">by {{book.author_name | join(" , ")}}</p>
+          <div class="card-text">
+            <p>
+              by
+              <a
+                class="text-decoration-none text-reset"
+                href="{{url_for('authors', key=author.key)}}"
+                ><span>{{author.name}}</span></a
+              >
+            </p>
+          </div>
         </div>
       </div>
     </div>

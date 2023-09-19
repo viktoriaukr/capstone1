@@ -42,7 +42,9 @@
       {% if author.name %}
       <h5>
         by
-        <a href="{{url_for('authors', key=author.key)}}"
+        <a
+          class="text-decoration-none text-reset"
+          href="{{url_for('authors', key=author.key)}}"
           ><span>{{author.name}}</span></a
         >
       </h5>
