@@ -1,5 +1,5 @@
-from email.quoprimime import quote
 import os
+import time
 from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
@@ -135,6 +135,12 @@ def search_data():
 
 
 @app.route("/")
+def loading_page():
+    time.sleep(3)
+    return redirect("/home")
+
+
+@app.route("/home")
 def fetch_books():
     """Fetches books for home page."""
     limit = 18
