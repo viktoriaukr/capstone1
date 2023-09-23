@@ -7,11 +7,17 @@
     {% for book in books %}
     <div class="col">
       <div class="card h-100">
+        {% if book.book.covers %}
         <img
           src="http://covers.openlibrary.org/b/id/{{ book.book.covers[0] }}-M.jpg"
           alt="{{ book.book.title }}"
           class="rounded"
-        />
+        />{% else %}
+        <img
+          src="../../static/images/default-placeholder.png"
+          class="rounded"
+          alt="{{ book.book.title }}"
+        />{% endif %}
         <div class="card-body">
           <h5 class="card-title">
             <a

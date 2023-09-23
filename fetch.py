@@ -42,8 +42,6 @@ def search(q):
         return []
 
 
-
-
 def author_works(key):
     url = f"https://openlibrary.org/{key}/works.json"
     res = requests.get(url)

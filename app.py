@@ -149,11 +149,10 @@ def get_book(key, title):
     book = get_books(key)
 
     if "authors" in book and book["authors"]:
-        author_key = book["authors"][0]["author"]["key"]
+        author = get_authors_details(book["authors"][0]["author"]["key"])
     else:
-        author_key = None
+        author = None
 
-    author = get_authors_details(author_key)
     rating = get_ratings_details(key)
     reviews = Review.query.filter_by(book_id=key).all()
     form = FavoriteForm()
@@ -272,7 +271,10 @@ def destroy_choice():
         return redirect("/")
     books = Favorite.query.all()
     for book in books:
-        db.session.delete(book)
+        id = book.id
+        data = Favorite.query.get(id)
+        print(data)
+        db.session.delete(data)
         db.session.commit()
     return redirect("/my/list")
 
