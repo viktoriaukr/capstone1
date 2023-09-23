@@ -21,7 +21,7 @@ app.app_context().push()
 database_url = os.environ.get("DATABASE_URL", "postgresql:///books_lover")
 
 # Append the host parameter to specify the Unix domain socket path.
-database_url += "?host=/tmp/.s.PGSQL.5432"
+database_url += "?host=/tmp"
 
 # Set the modified database URL in your Flask app's configuration.
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
