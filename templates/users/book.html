@@ -97,6 +97,7 @@
   <div class="message-area mb-4" name="review">
     <p>{{review.text}}</p>
     <div class="d-flex justify-content-between">
+      {% if g.user %} {% if g.user.id == review.user.id %}
       <div>
         <form
           class="d-inline"
@@ -113,6 +114,7 @@
           <button class="btn btn-danger">Delete</button>
         </form>
       </div>
+      {% endif %}{% endif %}
       <span class="text-muted"
         ><i>{{review.timestamp.strftime('%d %B %Y')}}</i></span
       >
