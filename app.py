@@ -19,7 +19,7 @@ app = Flask(__name__)
 app.app_context().push()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-    "DATABASE_URL", "postgresql:///books_lover"
+    "DATABASE_URL", "postgresql://localhost/books_lover"
 )
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -269,6 +269,7 @@ def destroy_choice():
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
+
     books = Favorite.query.all()
     for book in books:
         id = book.id
