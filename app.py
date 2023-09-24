@@ -259,24 +259,22 @@ def list():
         author_key = book["authors"][0]["author"]["key"]
         author = get_authors_details(author_key)
         status = b.status
-        books.append({"book": book, "author": author, "status": status})
+        id = b.id
+        books.append({"id": id, "book": book, "author": author, "status": status})
     return render_template("users/favs.html", books=books)
 
 
-@app.route("/my/list/delete", methods=["POST"])
-def destroy_choice():
+@app.route("/my/list/<int:id>/delete", methods=["POST"])
+def destroy_choice(id):
     """Allows users to delete books from the favorites."""
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    books = Favorite.query.all()
-    for book in books:
-        id = book.id
-        data = Favorite.query.get(id)
-        print(data)
-        db.session.delete(data)
-        db.session.commit()
+    book = Favorite.query.get_or_404(id)
+    print(book)
+    db.session.delete(book)
+    db.session.commit()
     return redirect("/my/list")
 
 

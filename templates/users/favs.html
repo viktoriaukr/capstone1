@@ -36,7 +36,10 @@
             >
           </p>
           <p>Status: <i>{{book.status}}</i></p>
-          <form method="POST" action="/my/list/delete">
+          <form
+            method="POST"
+            action="{{url_for('destroy_choice', id = book.id)}}"
+          >
             <button class="btn btn-danger" style="width: 10rem">Delete</button>
           </form>
         </div>
