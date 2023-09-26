@@ -19,13 +19,15 @@ app = Flask(__name__)
 app.app_context().push()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-    "DATABASE_URL", "postgresql://qkzrbnpk:ZPcJumkR5UMihLSMTTNSRYFR2pVgzO4i@bubble.db.elephantsql.com/qkzrbnpk"
+    "DATABASE_URL", "postgresql:///books_lover"
 )
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = False
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "2d24980166707adcbff5305e4175c393")
+app.config["SECRET_KEY"] = os.environ.get(
+    "SECRET_KEY", "2d24980166707adcbff5305e4175c393"
+)
 toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
