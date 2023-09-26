@@ -19,7 +19,7 @@ app = Flask(__name__)
 app.app_context().push()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-    "DATABASE_URL", "postgres://qkzrbnpk:ZPcJumkR5UMihLSMTTNSRYFR2pVgzO4i@bubble.db.elephantsql.com/qkzrbnpk"
+    "DATABASE_URL", "postgresql://qkzrbnpk:ZPcJumkR5UMihLSMTTNSRYFR2pVgzO4i@bubble.db.elephantsql.com/qkzrbnpk"
 )
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
